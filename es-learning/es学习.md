@@ -19,6 +19,18 @@ es学习整理
 
 坑5：es用户的线程打开最大文件数
 
+elasticsearch-head 的安装中
+
+npm install -g  打包elasticsearch-head
+
+下载grunt npm instal -g grunt-cli
+
+报grunt 在本地没有的时候输入此命令 npm install grunt --save-dev
+
+
+
+npm install phantomjs-prebuilt@2.1.16   --ignore-scripts
+
 二、开始使用插入数据
 
 1、插入一个客户的数据
