@@ -23,7 +23,7 @@ elasticsearch-head 的安装中
 
 npm install -g  打包elasticsearch-head
 
-下载grunt npm instal -g grunt-cli
+下载grunt  npm instal -g grunt-cli
 
 报grunt 在本地没有的时候输入此命令 npm install grunt --save-dev
 
