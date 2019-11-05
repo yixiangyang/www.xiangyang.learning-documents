@@ -204,7 +204,30 @@ Random random = new Random();
 random.ints().limit(10).forEach(System.out::println);
 ```
 
-**map**
+**Filder(过滤)**
+
+过滤通过一个predicate接口来过滤并只保留符合条件的元素，该操作属于**中间操作**，所以我们可以在过滤后的结果来应用其他Stream操作（比如forEach）。forEach需要一个函数来对过滤后的元素依次执行。forEach是一个最终操作，所以我们不能在forEach之后来执行其他Stream操作。
+
+```java
+List<String> stringList = new ArrayList<>();
+stringList.add("ddd2");
+stringList.add("aaa2");
+stringList.add("bbb1");
+stringList.add("aaa1");
+stringList.add("bbb3");
+stringList.add("ccc");
+stringList.add("bbb2");
+stringList.add("ddd1");
+
+// 测试 Filter(过滤)
+stringList.stream()
+    .filter((s) -> s.startsWith("a"))
+     .forEach(System.out::println);//aaa2 aaa1
+```
+
+forEach 是为 Lambda 而设计的，保持了最紧凑的风格。而且 Lambda 表达式本身是可以重用的，非常方便
+
+**map（映射）**
 
 map方法用于映射每个元素到对应的结果，以下代码片段使用map输出了元素对应的平方数：
 
@@ -223,7 +246,7 @@ Random random = new Random();
 random.ints().limit(10).forEach(System.out::println);
 ```
 
-**sorted**
+**sorted（排序）**
 
 sorted 方法用于对流进行排序。以下代码片段使用 sorted 方法对输出的 10 个随机数进行排序：
 
@@ -270,6 +293,40 @@ System.out.println("所有数之和 : " + stats.getSum());
 System.out.println("平均数 : " + stats.getAverage());
 ```
 
+**Reduce(规约)**
+
+这是一个 **最终操作** ，允许通过指定的函数来讲stream中的多个元素规约为一个元素，规约后的结果是通过Optional 接口表示的：
+
+```
+        //测试 Reduce (规约)操作
+        Optional<String> reduced =
+                stringList
+                        .stream()
+                        .sorted()
+                        .reduce((s1, s2) -> s1 + "#" + s2);
+
+        reduced.ifPresent(System.out::println);//aaa1#aaa2#bbb1#bbb2#bbb3#ccc#ddd1#ddd2
+```
+
+**译者注：** 这个方法的主要作用是把 Stream 元素组合起来。它提供一个起始值（种子），然后依照运算规则（BinaryOperator），和前面 Stream 的第一个、第二个、第 n 个元素组合。从这个意义上说，字符串拼接、数值的 sum、min、max、average 都是特殊的 reduce。例如 Stream 的 sum 就相当于`Integer sum = integers.reduce(0, (a, b) -> a+b);`也有没有起始值的情况，这时会把 Stream 的前面两个元素组合起来，返回的是 Optional。
+
+```
+// 字符串连接，concat = "ABCD"
+String concat = Stream.of("A", "B", "C", "D").reduce("", String::concat); 
+// 求最小值，minValue = -3.0
+double minValue = Stream.of(-1.5, 1.0, -3.0, -2.0).reduce(Double.MAX_VALUE, Double::min); 
+// 求和，sumValue = 10, 有起始值
+int sumValue = Stream.of(1, 2, 3, 4).reduce(0, Integer::sum);
+// 求和，sumValue = 10, 无起始值
+sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
+// 过滤，字符串连接，concat = "ace"
+concat = Stream.of("a", "B", "c", "D", "e", "F").
+ filter(x -> x.compareTo("Z") > 0).
+ reduce("", String::concat);
+```
+
+上面代码例如第一个示例的 reduce()，第一个参数（空白字符）即为起始值，第二个参数（String::concat）为 BinaryOperator。这类有起始值的 reduce() 都返回具体的对象。而对于第四个示例没有起始值的 reduce()，由于可能没有足够的元素，返回的是 Optional，请留意这个区别
+
 ### 八、注解相关
 
 1）可以进行重复注解
@@ -284,7 +341,7 @@ Java 8扩展了注解的上下文。现在几乎可以为任何东西添加注�
 
 ### 九、 **并行（parallel）数组** 
 
-  Java 8增加了大量的新方法来对数组进行并行处理。可以说，最重要的是parallelSort()方法，因为它可以在多核机器上极大提高数组排序的速度。下面的例子展示了新方法（parallelXxx）的使用。
+  Java 8增加了大量的新方法来对数组进行并行处理。可以说，最重要的是parallelSort()方法，因为它可以在多核机器上极大提高数组排序的速度。
 
 ### 十、并发
 
