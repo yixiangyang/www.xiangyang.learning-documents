@@ -89,3 +89,9 @@ update user set host='%' where user='root' limit 1;
 刷新权限
 
 flush privileges
+
+Navicat 连接不上 修改设置密码的方式
+
+ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'yourPASSWORD';
+
+flush privileges;
