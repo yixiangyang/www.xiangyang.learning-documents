@@ -34,7 +34,8 @@ error while loading shared libraries: libaio.so.1: cannot open shared object fil
 
 ```java
 [mysqld]
-datadir=/opt/mysql-8.0.19-el7-x86_64
+basedir=/opt/mysql-8.0.19-el7-x86_64
+datadir=/opt/mysql-8.0.19-el7-x86_64/data
 socket=/opt/mysql-8.0.19-el7-x86_64/mysql.sock
 port = 3317
 user = mysql
